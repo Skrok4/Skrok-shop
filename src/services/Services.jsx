@@ -14,9 +14,8 @@ const Services = () => {
             <Col lg="3" md="4" key={index}>
               <motion.div
                 initial={{ y: -50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.1 }}
+                animate={{ y: 0, opacity: 1, transition: { duration: 0.7 } }}
+                whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
                 className={styles.services_item}
                 style={{ background: `${item.bg}` }}
               >

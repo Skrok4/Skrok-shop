@@ -107,8 +107,8 @@ const Login = () => {
               <Input.Password />
             </Form.Item>
 
-            <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit" block>
+            <Form.Item {...tailLayout} className="ant-col-offset-8">
+              <Button type="primary" htmlType="submit" block className="">
                 {loading ? <Spin /> : "Login"}
               </Button>
             </Form.Item>
