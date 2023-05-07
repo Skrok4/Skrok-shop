@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CommonSection from "../components/UI/CommonSection";
 import Helmet from "../components/Helmet/Helmet";
 import { Container, Col, Row } from "reactstrap";
@@ -56,6 +56,10 @@ const Shop = () => {
     }
     return sortedProducts;
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   return (
     <Helmet title="Shop">

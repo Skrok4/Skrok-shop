@@ -13,6 +13,11 @@ import styled from "styled-components";
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <Helmet title="Cart">
       <CommonSection title="Shopping Cart" />
