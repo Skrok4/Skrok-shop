@@ -1,0 +1,24 @@
+.delete-button {
+  display: flex;
+  align-items: center;
+}
+
+.product__img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.ant-table-cell {
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+.user__img {
+  max-width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+}

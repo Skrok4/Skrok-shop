@@ -1,0 +1,20 @@
+.table tr td img {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: contain;
+}
+
+td i {
+  cursor: pointer;
+}
+
+td,
+.th {
+  color: var(--primary-color);
+}
+
+.reduce__qty {
+  border: none;
+  outline: none;
+  margin-left: 20px;
+}
