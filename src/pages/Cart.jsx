@@ -4,7 +4,7 @@ import Helmet from "../components/Helmet/Helmet";
 import CommonSection from "../components/UI/CommonSection";
 import { Container, Row, Col } from "reactstrap";
 import { motion } from "framer-motion";
-import { cartActions } from "../redux/slices/cartSlice";
+import { deleteItem, decrementItem, updateItem } from "../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { buttonStyles } from "./Home.jsx";
@@ -72,26 +72,30 @@ const Cart = () => {
     </Helmet>
   );
 };
-
 const Tr = ({ item }) => {
   const dispatch = useDispatch();
 
+  const incrementQuantity = () => {
+    dispatch(
+      updateItem({
+        ...item,
+        quantity: item.quantity + 1,
+      })
+    );
+  };
+
   const decrementQuantity = () => {
     if (item.quantity > 1) {
-      dispatch(
-        cartActions.updateItem({
-          ...item,
-          quantity: item.quantity - 1,
-        })
-      );
+      dispatch(decrementItem(item.id));
     } else {
       deleteProduct();
     }
   };
 
   const deleteProduct = () => {
-    dispatch(cartActions.deleteItem(item.id));
+    dispatch(deleteItem(item.id));
   };
+
   return (
     <tr>
       <td>
@@ -101,9 +105,12 @@ const Tr = ({ item }) => {
       <td>${item.price}</td>
       <td>
         {item.quantity} pcs.
+        <button onClick={incrementQuantity} className="increase__qty">
+          <i className="ri-add-line"></i>
+        </button>
         {item.quantity > 1 && (
           <button onClick={decrementQuantity} className="reduce__qty">
-            <i className="ri-close-line"></i>
+            <i className="ri-subtract-line"></i>
           </button>
         )}
       </td>
@@ -117,6 +124,51 @@ const Tr = ({ item }) => {
     </tr>
   );
 };
+// const Tr = ({ item }) => {
+//   const dispatch = useDispatch();
+
+//   const decrementQuantity = () => {
+//     if (item.quantity > 1) {
+//       dispatch(
+//         cartActions.updateItem({
+//           ...item,
+//           quantity: item.quantity - 1,
+//         })
+//       );
+//     } else {
+//       deleteProduct();
+//     }
+//   };
+
+//   const deleteProduct = () => {
+//     dispatch(cartActions.deleteItem(item.id));
+//   };
+
+//   return (
+//     <tr>
+//       <td>
+//         <img src={item.imgUrl} alt=""></img>
+//       </td>
+//       <td>{item.productName}</td>
+//       <td>${item.price}</td>
+//       <td>
+//         {item.quantity} pcs.
+//         {item.quantity > 1 && (
+//           <button onClick={decrementQuantity} className="reduce__qty">
+//             <i className="ri-close-line"></i>
+//           </button>
+//         )}
+//       </td>
+//       <td>
+//         <motion.i
+//           whileTap={{ scale: 1.2 }}
+//           onClick={deleteProduct}
+//           className="ri-delete-bin-line"
+//         ></motion.i>
+//       </td>
+//     </tr>
+//   );
+// };
 
 const Button = styled(motion.button)`
  ${buttonStyles}

@@ -6,14 +6,14 @@ import { Link } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { cartActions } from "../../redux/slices/cartSlice";
+import { addItem } from "../../redux/slices/cartSlice";
 
 const ProductCard = ({ item }) => {
   const dispatch = useDispatch();
 
   const addToCart = () => {
     dispatch(
-      cartActions.addItem({
+      addItem({
         id: item.id,
         productName: item.productName,
         price: item.price,

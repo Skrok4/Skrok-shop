@@ -1,70 +1,61 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Form, FormGroup } from "reactstrap";
+import React, { useEffect } from "react";
+import { Container, Row, Col, FormGroup } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import Helmet from "../components/Helmet/Helmet";
-import Loader from "../components/Loader/Loader";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { setDoc, doc } from "firebase/firestore";
-import { auth, storage, db } from "../firebase-config";
 import { toast } from "react-toastify";
 
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import "../styles/login.scss";
 import { buttonStyles } from "./Home.jsx";
 import styled from "styled-components";
 
 const Signup = () => {
-  const [username, setUsename] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  const validationSchema = Yup.object({
+    firstName: Yup.string()
+      .min(3, "First name must be at least 3 characters")
+      .required("First name is required"),
+    lastName: Yup.string()
+      .max(40, "Last name cannot exceed 40 characters")
+      .required("Last name is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(8, "Password must be at least 8 characters")
+      .matches(
+        /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9])(?=.*[a-z]).{8,}$/,
+        "Password must contain at least 1 capital letter and 1 special character"
+      )
+      .required("Password is required"),
+  });
+
+  const handleSignup = (values, { setSubmitting, resetForm }) => {
     try {
-      // Upload file to Firebase Storage and get download URL
-      const storageRef = ref(storage, `images/${Date.now() + file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      const snapshot = await uploadTask;
-
-      const downloadURL = await getDownloadURL(snapshot.ref);
-
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
+      console.log("Registration successful");
+      console.log(
+        "First Name:",
+        values.firstName,
+        "\nLast Name:",
+        values.lastName,
+        "\nEmail:",
+        values.email
       );
-
-      const user = userCredential.user;
-
-      await updateProfile(user, {
-        displayName: username,
-        photoURL: downloadURL,
-      });
-
-      //store user data in firestore database
-      const userDocRef = doc(db, "users", user.uid);
-      await setDoc(userDocRef, {
-        uid: user.uid,
-        displayName: username,
-        email,
-        photoURL: downloadURL,
-      });
-
-      setLoading(false);
+      resetForm();
       toast.success("Account created successfully");
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (error) {
-      setLoading(false);
       toast.error(error.message);
     }
+    setSubmitting(false);
   };
 
   return (
@@ -72,53 +63,81 @@ const Signup = () => {
       <section>
         <Container>
           <Row>
-            {loading ? (
-              <Loader />
-            ) : (
-              <Col lg="6" className="m-auto text-center">
-                <h3 className="fw-bold mb-4"> Signup</h3>
-                <Form className="auth__form " onSubmit={handleSignup}>
+            <Col lg="6" className="m-auto text-center">
+              <h3 className="fw-bold mb-4">Signup</h3>
+              <Formik
+                initialValues={{
+                  firstName: "",
+                  lastName: "",
+                  email: "",
+                  password: "",
+                }}
+                validationSchema={validationSchema}
+                onSubmit={handleSignup}
+              >
+                <Form className="auth__form">
                   <FormGroup className="form__group">
-                    <input
+                    <Field
                       type="text"
-                      placeholder="Enter your username"
-                      value={username}
-                      onChange={(e) => setUsename(e.target.value)}
+                      name="firstName"
+                      placeholder="Enter your first name"
                       required
-                    ></input>
+                    />
+                    <ErrorMessage
+                      name="firstName"
+                      component="div"
+                      className="error-message"
+                    />
                   </FormGroup>
                   <FormGroup className="form__group">
-                    <input
+                    <Field
+                      type="text"
+                      name="lastName"
+                      placeholder="Enter your last name"
+                      required
+                    />
+                    <ErrorMessage
+                      name="lastName"
+                      component="div"
+                      className="error-message"
+                    />
+                  </FormGroup>
+                  <FormGroup className="form__group">
+                    <Field
                       type="email"
+                      name="email"
                       placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
                       required
-                    ></input>
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="error-message"
+                    />
                   </FormGroup>
                   <FormGroup className="form__group">
-                    <input
+                    <Field
                       type="password"
+                      name="password"
                       placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
                       required
-                    ></input>
+                    />
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="error-message"
+                    />
                   </FormGroup>
-
-                  <FormGroup className="form__group">
-                    <input type="file" onChange={handleFileChange}></input>
-                  </FormGroup>
-
                   <AuthButton type="submit" className="buy__btn auth__btn">
                     Create an account
                   </AuthButton>
                   <p>
-                    Already have an account?{""} <Link to="/login"> Login</Link>
+                    Already have an account? <Link to="/login">Login</Link>
                   </p>
                 </Form>
-              </Col>
-            )}
+              </Formik>
+            </Col>
+            {/* )} */}
           </Row>
         </Container>
       </section>

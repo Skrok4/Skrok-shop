@@ -25,6 +25,10 @@
   }
 }
 
+.error-message, .form__error{
+  color: red;
+}
+
 .ant-col-offset-8 {
   @media screen and (max-width: 575px) {
     margin-inline-start: 0;

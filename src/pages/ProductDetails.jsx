@@ -6,7 +6,7 @@ import Helmet from "../components/Helmet/Helmet";
 import CommonSection from "../components/UI/CommonSection";
 import ProductsList from "../components/UI/ProductsList";
 import { useDispatch } from "react-redux";
-import { cartActions } from "../redux/slices/cartSlice";
+import { addItem } from "../redux/slices/cartSlice";
 import { toast } from "react-toastify";
 import "../styles/product-details.scss";
 import { motion } from "framer-motion";
@@ -135,7 +135,7 @@ const ProductDetails = () => {
 
   const addToCart = () => {
     dispatch(
-      cartActions.addItem({
+      addItem({
         id,
         image: imgUrl,
         productName,
@@ -342,3 +342,5 @@ const BuyButton = styled(motion.button)`
   }
 `;
 export default ProductDetails;
+
+

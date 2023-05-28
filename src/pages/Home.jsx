@@ -29,6 +29,10 @@ const Home = () => {
     true
   );
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
+
   const monthNames = [
     "☃️January❄️",
     "💝February💕",
@@ -103,7 +107,11 @@ const Home = () => {
               </HeroContent>
             </Col>
             <Col lg="6" md="6">
-              <img src={heroImg} alt="" />
+              <img
+                src={heroImg}
+                alt="HeroImage"
+                style={{ pointerEvents: "none" }}
+              />
             </Col>
           </Row>
         </Container>
@@ -268,7 +276,6 @@ const StoreButton = styled(motion.button)`
     background: var(--primary-color);
     color: #fff;
     outline: 2px solid #fff;
-    font-weight: 650;
   }
 `;
 
